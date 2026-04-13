@@ -1,0 +1,28 @@
+.mind-orbit__canvas-wrap {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.mind-orbit__canvas-wrap .react-flow {
+  --xy-background-color: transparent;
+  background: transparent;
+}
+
+.mind-orbit__canvas-wrap .react-flow__controls {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--mo-border);
+  box-shadow: var(--mo-shadow);
+}
+
+.mind-orbit__canvas-wrap .react-flow__controls-button {
+  background: var(--mo-bg-elevated);
+  border-bottom-color: var(--mo-border);
+  color: var(--mo-text-muted);
+}
+
+.mind-orbit__canvas-wrap .react-flow__controls-button:hover {
+  background: var(--mo-accent-soft);
+  color: var(--mo-text);
+}

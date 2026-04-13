@@ -1,0 +1,77 @@
+.app-toolbar {
+  position: relative;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--mo-border);
+  background: var(--mo-bg-elevated);
+  backdrop-filter: blur(12px);
+}
+
+.app-toolbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.app-toolbar__logo {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: var(--mo-accent-soft);
+  color: var(--mo-accent);
+  font-size: 18px;
+}
+
+.app-toolbar__name {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--mo-text);
+}
+
+.app-toolbar__tagline {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--mo-text-muted);
+}
+
+.app-toolbar__actions {
+  display: flex;
+  gap: 10px;
+}
+
+.app-toolbar__btn {
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--mo-border);
+  background: var(--mo-surface);
+  color: var(--mo-text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.app-toolbar__btn:hover {
+  background: var(--mo-bg);
+  border-color: var(--mo-border-strong);
+}
+
+.app-toolbar__btn--accent {
+  border-color: transparent;
+  background: var(--mo-accent);
+  color: #fff;
+}
+
+.app-toolbar__btn--accent:hover {
+  filter: brightness(1.06);
+  border-color: transparent;
+}

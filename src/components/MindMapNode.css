@@ -1,0 +1,71 @@
+.mind-map-node {
+  min-width: 160px;
+  max-width: 220px;
+  border-radius: 14px;
+  border: 1px solid var(--mo-border-strong);
+  background: var(--mo-surface);
+  box-shadow: var(--mo-shadow-node), var(--mo-glow);
+  transition:
+    box-shadow 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.12s ease;
+}
+
+.mind-map-node.is-root {
+  background: var(--mo-root-gradient);
+  border-color: var(--mo-border-strong);
+}
+
+.mind-map-node.is-selected {
+  border-color: var(--mo-accent);
+  box-shadow: var(--mo-shadow-node), 0 0 0 3px var(--mo-selection);
+}
+
+.mind-map-node__body {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  min-height: 48px;
+  box-sizing: border-box;
+}
+
+.mind-map-node__label {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--mo-text);
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.mind-map-node__input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-weight: 500;
+  color: var(--mo-text);
+  outline: none;
+}
+
+.mind-map-node__badge {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--mo-accent);
+  opacity: 0.85;
+}
+
+.mind-map-node__handle {
+  width: 6px !important;
+  height: 6px !important;
+  border: none !important;
+  background: transparent !important;
+  opacity: 0;
+}
+
+.mind-map-node.is-collapsed .mind-map-node__label {
+  opacity: 0.92;
+}
