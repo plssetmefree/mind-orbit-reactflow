@@ -88,16 +88,26 @@ const initialNodes = [
   },
 ]
 
-export default function MindOrbitCanvas({ fitViewKey = 0 }) {
+export default function MindOrbitCanvas({
+  initialGraph,
+  fitViewKey = 0,
+  onGraphChange,
+}) {
   const rf = useReactFlow()
   const hostRef = useRef(null)
   const draftRef = useRef('')
   const editingIdRef = useRef(null)
-  const [nodes, setNodes] = useState(initialNodes)
-  const [edges, setEdges] = useState([])
+  const [nodes, setNodes] = useState(initialGraph?.nodes || initialNodes)
+  const [edges, setEdges] = useState(initialGraph?.edges || [])
   const [editingId, setEditingId] = useState(null)
   const [draftLabel, setDraftLabel] = useState('')
   const edgesRef = useRef(edges)
+  const pastRef = useRef([])
+  const futureRef = useRef([])
+  const lastSnapshotRef = useRef(
+    JSON.stringify({ nodes: initialGraph?.nodes || initialNodes, edges: initialGraph?.edges || [] }),
+  )
+  const applyingHistoryRef = useRef(false)
 
   useEffect(() => {
     edgesRef.current = edges
@@ -116,6 +126,51 @@ export default function MindOrbitCanvas({ fitViewKey = 0 }) {
       rf.fitView({ padding: 0.35, duration: 280, maxZoom: 1.1 })
     }
   }, [fitViewKey, rf])
+
+  useEffect(() => {
+    if (!onGraphChange) return
+    onGraphChange({ nodes, edges })
+  }, [nodes, edges, onGraphChange])
+
+  useEffect(() => {
+    const currentSnapshot = JSON.stringify({ nodes, edges })
+    if (currentSnapshot === lastSnapshotRef.current) return
+
+    if (applyingHistoryRef.current) {
+      lastSnapshotRef.current = currentSnapshot
+      applyingHistoryRef.current = false
+      return
+    }
+
+    pastRef.current.push(lastSnapshotRef.current)
+    if (pastRef.current.length > 100) {
+      pastRef.current.shift()
+    }
+    futureRef.current = []
+    lastSnapshotRef.current = currentSnapshot
+  }, [nodes, edges])
+
+  const undo = useCallback(() => {
+    const previous = pastRef.current.pop()
+    if (!previous) return
+    futureRef.current.push(lastSnapshotRef.current)
+    const parsed = JSON.parse(previous)
+    applyingHistoryRef.current = true
+    lastSnapshotRef.current = previous
+    setNodes(parsed.nodes || [])
+    setEdges(parsed.edges || [])
+  }, [])
+
+  const redo = useCallback(() => {
+    const next = futureRef.current.pop()
+    if (!next) return
+    pastRef.current.push(lastSnapshotRef.current)
+    const parsed = JSON.parse(next)
+    applyingHistoryRef.current = true
+    lastSnapshotRef.current = next
+    setNodes(parsed.nodes || [])
+    setEdges(parsed.edges || [])
+  }, [])
 
   const selectedId = useMemo(
     () => nodes.find((n) => n.selected)?.id ?? null,
@@ -329,6 +384,17 @@ export default function MindOrbitCanvas({ fitViewKey = 0 }) {
 
   useEffect(() => {
     const onKey = (e) => {
+      const mod = e.ctrlKey || e.metaKey
+      if (mod && e.key.toLowerCase() === 'z') {
+        e.preventDefault()
+        if (e.shiftKey) {
+          redo()
+        } else {
+          undo()
+        }
+        return
+      }
+
       if (e.target.closest('input, textarea, select')) return
       if (!selectedId) return
       if (e.key === 'Enter') {
@@ -347,7 +413,7 @@ export default function MindOrbitCanvas({ fitViewKey = 0 }) {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [addChild, addSibling, deleteSubtree, selectedId, startEdit])
+  }, [addChild, addSibling, deleteSubtree, redo, selectedId, startEdit, undo])
 
   const onNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),

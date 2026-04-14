@@ -43,7 +43,18 @@
 
 .app-toolbar__actions {
   display: flex;
+  align-items: center;
   gap: 10px;
+}
+
+.app-toolbar__select {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--mo-border);
+  background: var(--mo-surface);
+  color: var(--mo-text);
+  font-size: 13px;
+  min-width: 170px;
 }
 
 .app-toolbar__btn {
@@ -74,4 +85,9 @@
 .app-toolbar__btn--accent:hover {
   filter: brightness(1.06);
   border-color: transparent;
+}
+
+.app-toolbar__status {
+  font-size: 12px;
+  color: var(--mo-text-muted);
 }
